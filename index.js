@@ -70,26 +70,27 @@ app.get("/edit", async (req, res) => {
 
 
 app.get('/blog', async (req, res) => {
-  try {
-    const blogs = await readBlogsFromFile();
-    const blogIndex = parseInt(req.query.id);
-    
-    if (isNaN(blogIndex) || blogIndex < 0 || blogIndex >= blogs.length) {
-      return res.redirect('/');
+    try {
+      const blogs = await readBlogsFromFile();
+      const blogIndex = parseInt(req.query.id);
+      
+      if (isNaN(blogIndex) || blogIndex < 0 || blogIndex >= blogs.length) {
+        return res.redirect('/');
+      }
+      
+      const currentBlog = blogs[blogIndex];
+      const formattedContent = marked(currentBlog.content);
+      
+      res.render("viewblog.ejs", {
+        title: currentBlog.title,
+        content: formattedContent,
+        rawContent: currentBlog.content,
+        blog_id: blogIndex  
+      });
+    } catch (err) {
+      res.status(500).send("Error loading blog");
     }
-    
-    const currentBlog = blogs[blogIndex];
-    const formattedContent = marked(currentBlog.content);
-    
-    res.render("viewblog.ejs", {
-      title: currentBlog.title,
-      content: formattedContent,
-      rawContent: currentBlog.content
-    });
-  } catch (err) {
-    res.status(500).send("Error loading blog");
-  }
-});
+  });
 
 
 app.post("/post", async (req, res) => {
