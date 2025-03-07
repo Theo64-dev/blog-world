@@ -1,0 +1,111 @@
+<%- include("partials/header.ejs") %>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-10 mx-auto">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h2 class="mb-0"><%= isNew ? "Write a new blog" : "Edit your blog" %></h2>
+        </div>
+        <div class="card-body">
+          <form action="<%= isNew ? '/post' : '/update' %>" method="POST">
+            <% if (!isNew) { %>
+              <input type="hidden" name="blogId" value="<%= blogId %>">
+            <% } %>
+            
+            <div class="mb-3">
+              <label for="title" class="form-label">Title:</label>
+              <input type="text" class="form-control" id="title" name="title" 
+                placeholder="Enter the title of your blog" value="<%= blog.title %>" required>
+            </div>
+            
+            <div class="mb-3">
+              <label for="content" class="form-label">Content (supports Markdown):</label>
+              <div class="d-flex flex-column">
+                <div class="mb-2">
+                  <div class="btn-group mb-2" role="group" aria-label="Markdown formatting">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="bold-btn">Bold</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="italic-btn">Italic</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="heading-btn">Heading</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="link-btn">Link</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="list-btn">List</button>
+                  </div>
+                </div>
+                <textarea class="form-control" id="content" name="content" rows="10" required><%= blog.content %></textarea>
+              </div>
+              <div class="form-text">Use Markdown for formatting your content</div>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Preview:</label>
+              <div class="border p-3 rounded bg-light" id="preview"></div>
+            </div>
+            
+            <div class="d-flex justify-content-between">
+              <a href="/" class="btn btn-secondary">Cancel</a>
+              <button type="submit" class="btn btn-primary"><%= isNew ? "Save & Post" : "Update Blog" %></button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+  $(document).ready(function() {
+    // Preview markdown as you type
+    function updatePreview() {
+      const content = $('#content').val();
+      $('#preview').html(marked.parse(content));
+    }
+    
+    $('#content').on('input', updatePreview);
+    
+    // Initialize preview
+    updatePreview();
+    
+    // Helper function to insert text at cursor position
+    function insertAtCursor(textarea, before, after = '') {
+      const startPos = textarea.selectionStart;
+      const endPos = textarea.selectionEnd;
+      const selectedText = textarea.value.substring(startPos, endPos);
+      
+      textarea.value = textarea.value.substring(0, startPos) + 
+                       before + selectedText + after + 
+                       textarea.value.substring(endPos);
+      
+      textarea.focus();
+      textarea.selectionStart = startPos + before.length;
+      textarea.selectionEnd = startPos + before.length + selectedText.length;
+      
+      updatePreview();
+    }
+    
+    // Formatting buttons
+    $('#bold-btn').click(function() {
+      insertAtCursor(document.getElementById('content'), '**', '**');
+    });
+    
+    $('#italic-btn').click(function() {
+      insertAtCursor(document.getElementById('content'), '_', '_');
+    });
+    
+    $('#heading-btn').click(function() {
+      insertAtCursor(document.getElementById('content'), '## ');
+    });
+    
+    $('#link-btn').click(function() {
+      insertAtCursor(document.getElementById('content'), '[', '](url)');
+    });
+    
+    $('#list-btn').click(function() {
+      insertAtCursor(document.getElementById('content'), '- ');
+    });
+  });
+</script>
+
+</body>
+</html>

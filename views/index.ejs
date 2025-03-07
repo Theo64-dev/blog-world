@@ -1,0 +1,52 @@
+<%- include("partials/header.ejs") %>
+
+<div class="px-2 py-5 text-center hero">
+    <img id="logo" class="d-block mx-auto mb-4" src="images/BW.png" alt="BW logo">
+    <h1 id="heading" class="display-5 fw-bold">Welcome to Blog World!</h1>
+    <div class="col-lg-6 mx-auto">
+        <p id="hero-lead" class="lead mb-4">Share your stories, revisit past blogs, or tidy up by deleting old posts. At Blog World, your words have a place to shine – start blogging today!</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <a href="/write" class="btn btn-primary btn-lg px-4 gap-3" id="write-btn">Write a Blog</a>
+        </div>
+    </div>
+</div>
+
+<% if(blog_arr.length > 0){ %>
+<div id="blogs-list" class="container py-5 px-4 mx-0">
+    <div class="row my-2 mx-5">
+        <p class="blogs-text fs-4 fw-bold">Previous Blogs:</p>
+    </div>
+    <% for(var i = 0; i < blog_arr.length; i++){ %>
+    <div class="row my-3 mx-5 py-2 border-bottom">
+        <div class="col-md-7 blogs-text">
+            <h5><%= blog_arr[i]["title"] %></h5>
+            <% if (blog_arr[i].createdAt) { %>
+                <small class="text-muted">Created: <%= new Date(blog_arr[i].createdAt).toLocaleString() %></small>
+            <% } %>
+            <% if (blog_arr[i].updatedAt) { %>
+                <small class="text-muted ms-2">Updated: <%= new Date(blog_arr[i].updatedAt).toLocaleString() %></small>
+            <% } %>
+        </div>
+        <div class="col-md-5 d-flex justify-content-md-end align-items-center">
+            <div class="btn-group" role="group" aria-label="Blog actions">
+                <button type="button" id="<%= i %>" class="btn btn-primary view-btn">Read</button>
+                <button type="button" id="<%= i %>" class="btn btn-secondary edit-btn">Edit</button>
+                <button type="button" id="<%= i %>" class="btn btn-danger delete-btn">Delete</button>
+            </div>
+        </div>
+    </div>
+    <% } %>
+</div>
+<% } else { %>
+<div class="container py-5">
+    <div class="alert alert-info text-center" role="alert">
+        No blogs yet! Click "Write a Blog" to create your first blog post.
+    </div>
+</div>
+<% } %>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="scripts/main.js"></script>
+
+</body>
+</html>

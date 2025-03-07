@@ -1,0 +1,26 @@
+html{
+    font-size: 16px;
+}
+#heading{
+    color: #EEEEEE;
+}
+.hero{
+    background-color: #222831;
+}
+#write-btn{
+    background-color: #76ABAE;
+    color: #EEEEEE;
+}
+#hero-lead{
+    color:#EEEEEE;
+}
+#logo{
+    height: 100px;
+    width: 100px;
+}
+#blogs-list{
+    background-color: #EEEEEE;
+}
+.blogs-text{
+    color: #222831;
+}
